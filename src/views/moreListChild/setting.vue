@@ -1,196 +1,204 @@
 <template>
-  <div id="setting">
-    <toast class="toast" v-if="isShow" :info="toastMsg" />
-    <table v-if="userInfo">
-      <tbody>
-        <tr>
-          <td colspan="2">
-            <h2 class="main-title">个人资料</h2>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <div class="uploadAvatar">
-              <span class="title">头像</span>
-              <div class="avatar">
-                <img :src="userInfo.avatarSrc" alt="头像" />
-              </div>
-              <div class="btn-area">
-                <p class="tips">支持jipg、png、 jpeg格式大小5M以内的图片</p>
-                <div class="up-btn">
-                  点击上传
-                  <input
-                    type="file"
-                    name="file"
-                    accept="image/png,image/gif,image/jpeg"
-                    @change="uploadAvatar($event)"
-                  />
+  <scroll height="64vh" :pullUp="false">
+    <div id="setting">
+      <toast class="toast" v-if="isShow" :info="toastMsg" />
+      <table v-if="userInfo">
+        <tbody>
+          <tr>
+            <td colspan="2">
+              <h2 class="main-title">个人资料</h2>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div class="uploadAvatar">
+                <span class="title">头像</span>
+                <div class="avatar">
+                  <img :src="userInfo.avatarSrc" alt="头像" />
+                </div>
+                <div class="btn-area">
+                  <p class="tips">支持jipg、png、 jpeg格式大小5M以内的图片</p>
+                  <div class="up-btn">
+                    点击上传
+                    <input
+                      type="file"
+                      name="file"
+                      accept="image/png,image/gif,image/jpeg"
+                      @change="uploadAvatar($event)"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <inputBox
-              title="用户名"
-              :keyNum="1"
-              :value="userInfo.userName"
-              placeholder="填写用户名"
-              @save-info="saveInfo"
-              :maxLength="20"
-              contentValue="用户名"
-            />
-          </td>
-          <td>
-            <div class="input-box">
-              <span class="title">地区</span>
-              <!-- 国籍 -->
-              <select>
-                <option value="">中国</option>
-              </select>
-              <!-- 省份 -->
-              <select ref="provinces" v-model="province" @change="getProvinces">
-                <!-- <option value="">请选择</option> -->
-                <option
-                  v-for="(item, optionIndex) in list"
-                  :value="item.code"
-                  :key="optionIndex"
-                  >{{ item.name }}</option
-                >
-              </select>
-              <!-- 城市 -->
-              <select v-model="cityVal" @change="updateNativePlace">
-                <!-- <option value="">请选择</option> -->
-                <option
-                  v-for="(item, optionIndex) in city"
-                  :value="item.code"
-                  :key="optionIndex"
-                  >{{ item.name }}</option
-                >
-              </select>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <inputBox
-              title="职业"
-              :value="userInfo.occupation"
-              :keyNum="2"
-              placeholder="填写你的职业"
-              @save-info="saveInfo"
-              :maxLength="10"
-              contentValue="职业"
-            />
-          </td>
-          <td>
-            <div class="input-box">
-              <span class="title">生日</span>
-              <input
-                type="date"
-                v-model="userInfo.dateOfBirth"
-                @change="updateBirth"
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <inputBox
+                title="用户名"
+                :keyNum="1"
+                :value="userInfo.userName"
+                placeholder="填写用户名"
+                @save-info="saveInfo"
+                :maxLength="20"
+                contentValue="用户名"
               />
-            </div>
-          </td>
-        </tr>
+            </td>
+            <td>
+              <div class="input-box">
+                <span class="title">地区</span>
+                <!-- 国籍 -->
+                <select>
+                  <option value="">中国</option>
+                </select>
+                <!-- 省份 -->
+                <select
+                  ref="provinces"
+                  v-model="province"
+                  @change="getProvinces"
+                >
+                  <!-- <option value="">请选择</option> -->
+                  <option
+                    v-for="(item, optionIndex) in list"
+                    :value="item.code"
+                    :key="optionIndex"
+                    >{{ item.name }}</option
+                  >
+                </select>
+                <!-- 城市 -->
+                <select v-model="cityVal" @change="updateNativePlace">
+                  <!-- <option value="">请选择</option> -->
+                  <option
+                    v-for="(item, optionIndex) in city"
+                    :value="item.code"
+                    :key="optionIndex"
+                    >{{ item.name }}</option
+                  >
+                </select>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <inputBox
+                title="职业"
+                :value="userInfo.occupation"
+                :keyNum="2"
+                placeholder="填写你的职业"
+                @save-info="saveInfo"
+                :maxLength="10"
+                contentValue="职业"
+              />
+            </td>
+            <td>
+              <div class="input-box">
+                <span class="title">生日</span>
+                <input
+                  type="date"
+                  v-model="userInfo.dateOfBirth"
+                  @change="updateBirth"
+                />
+              </div>
+            </td>
+          </tr>
 
-        <tr>
-          <td>
-            <inputBox
-              title="个性签名"
-              placeholder="填写你的个性签名"
-              :keyNum="3"
-              :value="userInfo.signature"
-              @save-info="saveInfo"
-              :maxLength="20"
-              contentValue="个性签名"
-            />
-          </td>
-          <td>
-            <div class="input-box">
-              <span class="title">性别</span>
-              <select v-model="userInfo.gender" @change="updateGender">
-                <!-- <option value="">性别</option> -->
-                <option value="0">男</option>
-                <option value="1">女</option>
-              </select>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <inputBox
-              title="邮箱地址"
-              placeholder="填写你的邮箱地址"
-              :keyNum="4"
-              :value="userInfo.emailAddress"
-              @save-info="saveInfo"
-              :maxLength="50"
-              contentValue="邮箱地址"
-            />
-          </td>
-          <td>
-            <inputBox
-              title="联系电话"
-              placeholder="填写联系点话"
-              :keyNum="7"
-              :value="userInfo.contactNumber"
-              @save-info="saveInfo"
-              :maxLength="20"
-              contentValue="联系电话"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <inputBox
-              title="学校"
-              placeholder="填写你的学校"
-              :keyNum="5"
-              :value="userInfo.schoolName"
-              @save-info="saveInfo"
-              :maxLength="30"
-              contentValue="学校"
-            />
-          </td>
-          <td>
-            <inputBox
-              title="详细地址"
-              placeholder="填写详细地址"
-              :keyNum="8"
-              :value="userInfo.address"
-              @save-info="saveInfo"
-              :maxLength="30"
-              contentValue="详细地址"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <inputBox
-              title="公司"
-              placeholder="填写你的公司"
-              :keyNum="6"
-              :value="userInfo.corporationName"
-              @save-info="saveInfo"
-              :maxLength="30"
-              contentValue="公司"
-            />
-          </td>
-          <td>
-            <button class="layout" @click="updateOnlineStatus">退出登录</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          <tr>
+            <td>
+              <inputBox
+                title="个性签名"
+                placeholder="填写你的个性签名"
+                :keyNum="3"
+                :value="userInfo.signature"
+                @save-info="saveInfo"
+                :maxLength="20"
+                contentValue="个性签名"
+              />
+            </td>
+            <td>
+              <div class="input-box">
+                <span class="title">性别</span>
+                <select v-model="userInfo.gender" @change="updateGender">
+                  <!-- <option value="">性别</option> -->
+                  <option value="0">男</option>
+                  <option value="1">女</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <inputBox
+                title="邮箱地址"
+                placeholder="填写你的邮箱地址"
+                :keyNum="4"
+                :value="userInfo.emailAddress"
+                @save-info="saveInfo"
+                :maxLength="50"
+                contentValue="邮箱地址"
+              />
+            </td>
+            <td>
+              <inputBox
+                title="联系电话"
+                placeholder="填写联系点话"
+                :keyNum="7"
+                :value="userInfo.contactNumber"
+                @save-info="saveInfo"
+                :maxLength="20"
+                contentValue="联系电话"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <inputBox
+                title="学校"
+                placeholder="填写你的学校"
+                :keyNum="5"
+                :value="userInfo.schoolName"
+                @save-info="saveInfo"
+                :maxLength="30"
+                contentValue="学校"
+              />
+            </td>
+            <td>
+              <inputBox
+                title="详细地址"
+                placeholder="填写详细地址"
+                :keyNum="8"
+                :value="userInfo.address"
+                @save-info="saveInfo"
+                :maxLength="30"
+                contentValue="详细地址"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <inputBox
+                title="公司"
+                placeholder="填写你的公司"
+                :keyNum="6"
+                :value="userInfo.corporationName"
+                @save-info="saveInfo"
+                :maxLength="30"
+                contentValue="公司"
+              />
+            </td>
+            <td>
+              <button class="layout" @click="updateOnlineStatus">
+                退出登录
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </scroll>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
+import scroll from "@/components/common/scroll.vue";
 import inputBox from "@/components/common/input-box.vue";
 import toast from "@/components/common/toast.vue";
 import { responseDataType } from "@/type/ComponentDataType";
@@ -200,6 +208,7 @@ export default defineComponent({
   name: "setting",
   components: {
     inputBox,
+    scroll,
     toast
   },
   props: {},

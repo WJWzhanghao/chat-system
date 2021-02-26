@@ -2,6 +2,7 @@
   <scroll
     :pullUp="true"
     :load-more="loadMore"
+    height="calc(61vh - 20px)"
     :probeType="0"
     @pulling-up="getUserFileList(loadMore)"
     ref="bScroll"
@@ -9,7 +10,7 @@
     <div class="file-content" ref="fileContent">
       <div v-if="dataInfoList.count == 0" class="noFile">没有文件数据</div>
       <div v-if="dataInfoList.count > 0" class="contentInfo-panel">
-        <template v-if="showFileData == 'dataInfoList'">
+        <template v-if="typeShape.showData == 'dataInfoList'">
           <div
             v-for="(item, index) in dataInfoList.fileList"
             :key="index"
@@ -29,8 +30,7 @@
             </div>
           </div>
         </template>
-        <template v-if="showFileData == 'selectList'">
-          1
+        <template v-if="typeShape.showData == 'selectList'">
           <div
             v-for="(item, index) in typeShape.selectList"
             :key="index"
@@ -50,7 +50,7 @@
             </div>
           </div>
         </template>
-        <template v-if="showFileData == 'searchList'">
+        <template v-if="typeShape.showData == 'searchList'">
           <div
             v-for="(item, index) in typeShape.searchList"
             :key="index"
@@ -138,11 +138,11 @@ export default defineComponent({
       // 上拉加载效果
       if (page.isActionPullup) {
         this.$refs.nowLoad.innerHTML = `<img src="${this.loading}" alt="" style=" width: 18px;height: 18px;transform: translate(-5px,3px);"/><p>加载中...</p>`;
-        if (this.showFileData == "dataInfoList") {
+        if (this.typeShape.showData == "dataInfoList") {
           page.pageNo = this.loadMore.pageNo + 1;
         }
       }
-      if (this.showFileData == "dataInfoList") {
+      if (this.typeShape.showData == "dataInfoList") {
         // 文件列表数据请求
         if (!this.closeRequestFileList) {
           this.$api.fileManageAPI
@@ -293,15 +293,15 @@ export default defineComponent({
       this.setHeight();
     },
     setHeight() {
-      if (this.showFileData == "searchList") {
+      if (this.typeShape.showData == "searchList") {
         // 不做请求时上拉加载效果
         this.$refs.fileContent.style.height =
           this.itemHeight * (this.typeShape.searchList.length + 0.75) + "px";
         this.$refs.bScroll.refresh();
         // 没有加载更多文件列表数据展示时上拉加载效果
         if (
-          parseInt(this.$refs.fileContent.style.height) <
-          parseInt(this.$refs.bScroll.$refs.wrapper.style.height)
+          parseInt(this.$refs.fileContent.offsetHeight) <
+          parseInt(this.$refs.bScroll.$refs.wrapper.offsetHeight)
         ) {
           if (this.typeShape.searchList.length == 0) {
             this.$refs.nowLoad.innerHTML = "没有该类型的文件";
@@ -327,11 +327,6 @@ export default defineComponent({
   mounted() {
     // this.getAddFileInfo();
     this.getUserFileList(this.loadMore);
-  },
-  computed: {
-    showFileData() {
-      return this.typeShape.showData;
-    }
   }
 });
 </script>

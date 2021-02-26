@@ -27,6 +27,9 @@ export default defineComponent({
     loadMore: {
       type: Object,
       default: () => ({})
+    },
+    height: {
+      type: String
     }
   },
   data() {
@@ -39,7 +42,7 @@ export default defineComponent({
   },
   mounted() {
     this.loadMoreData = this.loadMore;
-    this.$refs.wrapper.style.height = window.innerHeight * 0.62 + "px";
+    this.$refs.wrapper.style.height = this.height;
     // 1.创建BScroll对象
 
     setTimeout(() => {

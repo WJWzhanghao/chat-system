@@ -58,22 +58,22 @@
           />
         </div>
       </div>
+    </div>
+    <div v-if="tabIndex == 0">
       <file ref="file" />
     </div>
     <div v-if="tabIndex == 1">
       <feed-back />
     </div>
     <div v-if="tabIndex == 2">
-      <scroll>
-        <setting />
-      </scroll>
+      <setting />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import scroll from "@/components/common/scroll.vue";
+
 import tabControl from "./moreListChild/tab-control.vue";
 import file from "./moreListChild/file.vue";
 import feedBack from "./moreListChild/feed-back.vue";
@@ -83,7 +83,6 @@ import { solarToLunar } from "vue-solar-lunar";
 export default defineComponent({
   name: "more-list",
   components: {
-    scroll,
     tabControl,
     file,
     feedBack,
@@ -123,7 +122,9 @@ export default defineComponent({
     },
     tabClick(index: string) {
       this.tabIndex = index;
-      // this.$refs.tabControl.img.style.height = "180px";
+      if (index == "0") {
+        this.searchValue = "";
+      }
     },
     showSelectFile() {
       this.fileContentData.showSelectValue = !this.fileContentData
